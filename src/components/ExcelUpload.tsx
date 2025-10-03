@@ -1,11 +1,27 @@
-import { useState } from "react";
-import { Upload, FileSpreadsheet, CheckCircle2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Upload, FileSpreadsheet, CheckCircle2, Brain, Zap, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
 const ExcelUpload = () => {
   const [uploadProgress, setUploadProgress] = useState(72);
   const [fileName, setFileName] = useState("logistics_data_oct_2024.xlsx");
+  const [isProcessing, setIsProcessing] = useState(true);
+
+  // Simulate progress updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setUploadProgress((prev) => {
+        if (prev >= 100) {
+          setIsProcessing(false);
+          return 100;
+        }
+        return Math.min(prev + Math.random() * 3, 100);
+      });
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="bg-card rounded-xl border border-border shadow-lg overflow-hidden animate-fade-in">
@@ -33,25 +49,66 @@ const ExcelUpload = () => {
 
         {/* Current File & Progress */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border border-border">
-            <div className="flex items-center gap-3">
-              <FileSpreadsheet className="w-5 h-5 text-primary" />
-              <div>
-                <div className="font-medium">{fileName}</div>
-                <div className="text-sm text-muted-foreground">Syncing with AI Engine</div>
+          <div className="relative overflow-hidden p-5 bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg border-2 border-primary/20">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <FileSpreadsheet className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <div className="font-bold text-lg">{fileName}</div>
+                  <div className="text-sm text-muted-foreground flex items-center gap-2">
+                    {isProcessing ? (
+                      <>
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        Syncing with AI Engine
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-3 h-3 text-success" />
+                        Sync Complete
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-primary">{Math.round(uploadProgress)}%</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-primary">{uploadProgress}%</span>
-            </div>
-          </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Carrier Response Rate</span>
-              <span className="font-semibold text-foreground">{uploadProgress}% Complete</span>
+            {/* Animated AI Processing Icons */}
+            <div className="flex items-center justify-center gap-4 my-4">
+              <div className="p-3 bg-primary/10 rounded-full animate-pulse">
+                <Brain className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex gap-1">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                    style={{ animationDelay: `${i * 0.15}s` }}
+                  />
+                ))}
+              </div>
+              <div className="p-3 bg-accent/10 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}>
+                <Zap className="w-5 h-5 text-accent" />
+              </div>
             </div>
-            <Progress value={uploadProgress} className="h-3" />
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground font-medium">Carrier Response Rate</span>
+                <span className="font-bold text-foreground">{Math.round(uploadProgress)}% Complete</span>
+              </div>
+              <div className="relative">
+                <Progress value={uploadProgress} className="h-4" />
+                <div 
+                  className="absolute top-0 left-0 h-4 bg-gradient-primary rounded-full transition-all duration-500 opacity-50 blur-sm"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+            </div>
           </div>
         </div>
 

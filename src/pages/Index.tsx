@@ -5,7 +5,7 @@ import ExcelUpload from "@/components/ExcelUpload";
 import CarrierPanel from "@/components/CarrierPanel";
 import AssignmentLogic from "@/components/AssignmentLogic";
 import IntegrationStatus from "@/components/IntegrationStatus";
-import InteractiveMap from "@/components/InteractiveMap";
+import MexicoMapTracker from "@/components/MexicoMapTracker";
 
 const Index = () => {
   const [assignmentCriteria, setAssignmentCriteria] = useState<"percentage" | "cost">("percentage");
@@ -47,11 +47,11 @@ const Index = () => {
         {/* Shipment Dashboard */}
         <ShipmentDashboard assignmentCriteria={assignmentCriteria} />
 
-        {/* Carrier Communication Panel */}
-        <CarrierPanel />
+        {/* Interactive Mexico Map */}
+        <MexicoMapTracker />
 
-        {/* Interactive Map */}
-        <InteractiveMap />
+        {/* Carrier Communication Panel (Escalation) */}
+        <CarrierPanel />
 
         {/* Integration Status */}
         <IntegrationStatus />
