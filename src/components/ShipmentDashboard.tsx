@@ -94,19 +94,6 @@ const mockShipments = [
 ];
 
 const ShipmentDashboard = ({ assignmentCriteria }: ShipmentDashboardProps) => {
-  // Group shipments by carrier
-  const shipmentsByCarrier = mockShipments.reduce((acc, shipment) => {
-    if (!acc[shipment.carrierName]) {
-      acc[shipment.carrierName] = {
-        carrierId: shipment.carrierId,
-        contactMethods: shipment.contactMethods,
-        shipments: []
-      };
-    }
-    acc[shipment.carrierName].shipments.push(shipment);
-    return acc;
-  }, {} as Record<string, { carrierId: string; contactMethods: readonly string[]; shipments: typeof mockShipments }>);
-
   const getContactIcon = (method: string) => {
     switch (method) {
       case "phone":
@@ -165,79 +152,64 @@ const ShipmentDashboard = ({ assignmentCriteria }: ShipmentDashboardProps) => {
         <p className="text-muted-foreground mt-1">Track and manage all shipments in real-time</p>
       </div>
       
-      <div className="space-y-6">
-        {Object.entries(shipmentsByCarrier).map(([carrierName, carrierData]) => (
-          <div key={carrierName} className="border border-border rounded-lg overflow-hidden animate-fade-in">
-            {/* Carrier Header */}
-            <div className="bg-primary/5 p-4 border-b border-border">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="font-bold text-lg text-foreground">{carrierName}</div>
-                  <div className="text-sm text-muted-foreground">{carrierData.carrierId}</div>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent bg-muted/30">
+              <TableHead className="font-semibold">Contact</TableHead>
+              <TableHead className="font-semibold">Carrier</TableHead>
+              <TableHead className="font-semibold">Shipment ID</TableHead>
+              <TableHead className="font-semibold">Delivery Date</TableHead>
+              <TableHead className="font-semibold">Equipment Type</TableHead>
+              <TableHead className="font-semibold">Loading Time</TableHead>
+              <TableHead className="font-semibold">Cost</TableHead>
+              <TableHead className="font-semibold">Assignment %</TableHead>
+              <TableHead className="font-semibold">Status</TableHead>
+              <TableHead className="font-semibold">Optimal</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {mockShipments.map((shipment) => (
+              <TableRow 
+                key={shipment.id} 
+                className={`hover:bg-muted/50 transition-all duration-300 ${
+                  shipment.status === "accepted" ? "bg-success/5" :
+                  shipment.status === "pending" ? "bg-warning/5" :
+                  "bg-destructive/5"
+                }`}
+              >
+                <TableCell>
                   <div className="flex items-center gap-2">
-                    {carrierData.contactMethods.map((method) => (
-                      <div key={method} className="p-1.5 bg-card rounded-md border border-border hover:bg-muted/50 transition-colors">
+                    {shipment.contactMethods.map((method) => (
+                      <div key={method} className="p-1.5 bg-muted rounded-md border border-border">
                         {getContactIcon(method)}
                       </div>
                     ))}
                   </div>
-                </div>
-                <Badge className="bg-card text-foreground border-border">
-                  {carrierData.shipments.length} Shipment{carrierData.shipments.length > 1 ? 's' : ''}
-                </Badge>
-              </div>
-            </div>
-            
-            {/* Shipments Table */}
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent bg-muted/30">
-                    <TableHead className="font-semibold">Shipment ID</TableHead>
-                    <TableHead className="font-semibold">Delivery Date</TableHead>
-                    <TableHead className="font-semibold">Equipment Type</TableHead>
-                    <TableHead className="font-semibold">Loading Time</TableHead>
-                    <TableHead className="font-semibold">Cost</TableHead>
-                    <TableHead className="font-semibold">Assignment %</TableHead>
-                    <TableHead className="font-semibold">Status</TableHead>
-                    <TableHead className="font-semibold">Optimal</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {carrierData.shipments.map((shipment) => (
-                    <TableRow 
-                      key={shipment.id} 
-                      className={`hover:bg-muted/50 transition-all duration-300 ${
-                        shipment.status === "accepted" ? "bg-success/5" :
-                        shipment.status === "pending" ? "bg-warning/5" :
-                        "bg-destructive/5"
-                      }`}
-                    >
-                      <TableCell className="font-medium text-primary">{shipment.id}</TableCell>
-                      <TableCell>{shipment.deliveryDate}</TableCell>
-                      <TableCell>{shipment.equipmentType}</TableCell>
-                      <TableCell>{shipment.loadingTime}</TableCell>
-                      <TableCell className="font-semibold">${shipment.cost.toLocaleString()}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 bg-muted rounded-full h-2 min-w-[60px]">
-                            <div 
-                              className="bg-gradient-primary h-2 rounded-full transition-all duration-500"
-                              style={{ width: `${shipment.assignmentPercentage}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-medium whitespace-nowrap">{shipment.assignmentPercentage}%</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{getStatusBadge(shipment.status)}</TableCell>
-                      <TableCell>{getOptimalIndicator(shipment)}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-        ))}
+                </TableCell>
+                <TableCell className="font-medium">{shipment.carrierName}</TableCell>
+                <TableCell className="font-medium text-primary">{shipment.id}</TableCell>
+                <TableCell>{shipment.deliveryDate}</TableCell>
+                <TableCell>{shipment.equipmentType}</TableCell>
+                <TableCell>{shipment.loadingTime}</TableCell>
+                <TableCell className="font-semibold">${shipment.cost.toLocaleString()}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 bg-muted rounded-full h-2 min-w-[60px]">
+                      <div 
+                        className="bg-gradient-primary h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${shipment.assignmentPercentage}%` }}
+                      />
+                    </div>
+                    <span className="text-sm font-medium whitespace-nowrap">{shipment.assignmentPercentage}%</span>
+                  </div>
+                </TableCell>
+                <TableCell>{getStatusBadge(shipment.status)}</TableCell>
+                <TableCell>{getOptimalIndicator(shipment)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
