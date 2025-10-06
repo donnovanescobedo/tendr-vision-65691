@@ -11,7 +11,6 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   base: '/tendr-vision-65691/',
-  build: { outDir: 'docs' }, // para subir /docs directo
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
