@@ -1,4 +1,4 @@
-name: Deploy Vite (docs) to GitHub Pages
+name: Deploy Vite to GitHub Pages
 
 on:
   push:
@@ -25,21 +25,21 @@ jobs:
           node-version: 20
           cache: npm
 
-      # Instala dependencias (usa lock si existe; si no, instala normal)
+      # Instala dependencias (si no hay lockfile usa npm i)
       - run: npm ci || npm i
 
-      # Construye tu sitio (Vite dejará el resultado en ./docs)
+      # Construye Vite (salida por defecto: ./dist)
       - run: npm run build
 
-      # (Opcional) Fallback para SPA/React Router (evita 404 al refrescar rutas)
+      # Fallback SPA (útil si usas React Router; no hace daño si no)
       - name: SPA fallback
         run: |
-          if [ -f docs/index.html ]; then cp docs/index.html docs/404.html; fi
+          if [ -f dist/index.html ]; then cp dist/index.html dist/404.html; fi
 
-      # Sube la carpeta de build (en tu caso, ./docs)
+      # Publica la carpeta dist como artifact para GitHub Pages
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs
+          path: ./dist
 
   deploy:
     needs: build
