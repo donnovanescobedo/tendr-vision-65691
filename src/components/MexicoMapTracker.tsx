@@ -51,7 +51,7 @@ const MexicoMapTracker = () => {
       <div className="p-6 border-b border-border">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">Live Mexico Shipment Tracking</h2>
+            <h2 className="text-2xl font-bold text-foreground">Shipment Tracking</h2>
             <p className="text-muted-foreground mt-1">Real-time route visualization across Mexico</p>
           </div>
           <Badge className="bg-primary/10 text-primary border-primary/20">
