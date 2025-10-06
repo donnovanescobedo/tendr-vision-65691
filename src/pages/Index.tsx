@@ -5,7 +5,9 @@ import ExcelUpload from "@/components/ExcelUpload";
 import CarrierPanel from "@/components/CarrierPanel";
 import AssignmentLogic from "@/components/AssignmentLogic";
 import IntegrationStatus from "@/components/IntegrationStatus";
-import MexicoMapTracker from "@/components/MexicoMapTracker";
+import MapboxMap from "@/components/MapboxMap";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { MapPin } from "lucide-react";
 
 const Index = () => {
   const [assignmentCriteria, setAssignmentCriteria] = useState<"percentage" | "cost">("percentage");
@@ -48,7 +50,26 @@ const Index = () => {
         <ShipmentDashboard assignmentCriteria={assignmentCriteria} />
 
         {/* Interactive Mexico Map */}
-        <MexicoMapTracker />
+        <div className="bg-card rounded-xl border border-border shadow-lg overflow-hidden animate-fade-in">
+          <div className="p-6 border-b border-border">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-6 h-6 text-primary" />
+              <h2 className="text-2xl font-bold text-foreground">Shipment Tracking</h2>
+            </div>
+            <p className="text-muted-foreground mt-1">Real-time route visualization across Mexico</p>
+          </div>
+          
+          <div className="p-6">
+            <Alert className="mb-4">
+              <MapPin className="h-4 w-4" />
+              <AlertTitle>Mapbox Token Required</AlertTitle>
+              <AlertDescription>
+                To use the interactive map, please add your Mapbox public token. Get one at <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="underline">mapbox.com</a> and update it in MapboxMap.tsx
+              </AlertDescription>
+            </Alert>
+            <MapboxMap />
+          </div>
+        </div>
 
         {/* Carrier Communication Panel (Escalation) */}
         <CarrierPanel />

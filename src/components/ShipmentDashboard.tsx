@@ -14,7 +14,7 @@ const mockShipments = [
     loadingTime: "2.5 hrs",
     carrierId: "C-1247",
     carrierName: "Swift Transport",
-    contactMethods: ["phone", "whatsapp", "email"] as const,
+    contactMethod: "phone" as const,
     cost: 2450,
     assignmentPercentage: 92,
     status: "accepted" as const,
@@ -26,7 +26,7 @@ const mockShipments = [
     loadingTime: "3.0 hrs",
     carrierId: "C-8932",
     carrierName: "Cold Chain Logistics",
-    contactMethods: ["email", "phone"] as const,
+    contactMethod: "email" as const,
     cost: 3200,
     assignmentPercentage: 88,
     status: "pending" as const,
@@ -38,7 +38,7 @@ const mockShipments = [
     loadingTime: "2.0 hrs",
     carrierId: "C-4521",
     carrierName: "FastLine Freight",
-    contactMethods: ["whatsapp", "email"] as const,
+    contactMethod: "whatsapp" as const,
     cost: 2100,
     assignmentPercentage: 95,
     status: "accepted" as const,
@@ -50,7 +50,7 @@ const mockShipments = [
     loadingTime: "4.0 hrs",
     carrierId: "C-6789",
     carrierName: "Heavy Haul Pro",
-    contactMethods: ["phone", "email"] as const,
+    contactMethod: "phone" as const,
     cost: 4500,
     assignmentPercentage: 78,
     status: "rejected" as const,
@@ -62,7 +62,7 @@ const mockShipments = [
     loadingTime: "2.5 hrs",
     carrierId: "C-3344",
     carrierName: "Express Route Inc",
-    contactMethods: ["whatsapp", "phone", "email"] as const,
+    contactMethod: "whatsapp" as const,
     cost: 2300,
     assignmentPercentage: 90,
     status: "pending" as const,
@@ -74,7 +74,7 @@ const mockShipments = [
     loadingTime: "2.2 hrs",
     carrierId: "C-1247",
     carrierName: "Swift Transport",
-    contactMethods: ["phone", "whatsapp", "email"] as const,
+    contactMethod: "email" as const,
     cost: 2350,
     assignmentPercentage: 91,
     status: "accepted" as const,
@@ -86,7 +86,7 @@ const mockShipments = [
     loadingTime: "3.2 hrs",
     carrierId: "C-8932",
     carrierName: "Cold Chain Logistics",
-    contactMethods: ["email", "phone"] as const,
+    contactMethod: "phone" as const,
     cost: 3100,
     assignmentPercentage: 89,
     status: "accepted" as const,
@@ -179,12 +179,8 @@ const ShipmentDashboard = ({ assignmentCriteria }: ShipmentDashboardProps) => {
                 }`}
               >
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    {shipment.contactMethods.map((method) => (
-                      <div key={method} className="p-1.5 bg-muted rounded-md border border-border">
-                        {getContactIcon(method)}
-                      </div>
-                    ))}
+                  <div className="p-1.5 bg-muted rounded-md border border-border inline-flex">
+                    {getContactIcon(shipment.contactMethod)}
                   </div>
                 </TableCell>
                 <TableCell className="font-medium">{shipment.carrierName}</TableCell>
