@@ -10,7 +10,8 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
-  base: './',
+  base: '/tendr-vision-65691/',
+  build: { outDir: 'docs' }, // para subir /docs directo
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
