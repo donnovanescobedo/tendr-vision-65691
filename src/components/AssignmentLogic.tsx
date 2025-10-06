@@ -69,8 +69,11 @@ const AssignmentLogic = ({ criteria, onCriteriaChange }: AssignmentLogicProps) =
         </button>
       </div>
 
-      <div className="mt-6">
-        <Button className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90">
+      <div className="mt-6 flex gap-3">
+        <Button variant="outline" className="flex-1">
+          Manual Override
+        </Button>
+        <Button className="flex-1 bg-gradient-primary text-primary-foreground hover:opacity-90">
           Apply & Reassign All
         </Button>
       </div>

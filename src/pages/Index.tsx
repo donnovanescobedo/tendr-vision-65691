@@ -5,7 +5,8 @@ import ExcelUpload from "@/components/ExcelUpload";
 import CarrierPanel from "@/components/CarrierPanel";
 import AssignmentLogic from "@/components/AssignmentLogic";
 import IntegrationStatus from "@/components/IntegrationStatus";
-import LeafletMap from "@/components/LeafletMap";
+import MapboxMap from "@/components/MapboxMap";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { MapPin } from "lucide-react";
 
 const Index = () => {
@@ -59,7 +60,14 @@ const Index = () => {
           </div>
           
           <div className="p-6">
-            <LeafletMap />
+            <Alert className="mb-4">
+              <MapPin className="h-4 w-4" />
+              <AlertTitle>Mapbox Token Required</AlertTitle>
+              <AlertDescription>
+                To use the interactive map, please add your Mapbox public token. Get one at <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="underline">mapbox.com</a> and update it in MapboxMap.tsx
+              </AlertDescription>
+            </Alert>
+            <MapboxMap />
           </div>
         </div>
 
