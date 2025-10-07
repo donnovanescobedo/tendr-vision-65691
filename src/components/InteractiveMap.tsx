@@ -4,30 +4,30 @@ import { Badge } from "@/components/ui/badge";
 const mockRoutes = [
   {
     id: "SH-2024-001",
-    origin: "Chicago, IL",
-    destination: "New York, NY",
+    origin: "Ciudad de México",
+    destination: "Monterrey",
     status: "accepted" as const,
-    progress: 45,
-    eta: "2h 15m",
+    progress: 65,
+    eta: "3h 20m",
     carrier: "Swift Transport",
   },
   {
     id: "SH-2024-003",
-    origin: "Los Angeles, CA",
-    destination: "Seattle, WA",
+    origin: "Guadalajara",
+    destination: "Tijuana",
     status: "accepted" as const,
-    progress: 78,
-    eta: "45m",
-    carrier: "FastLine Freight",
+    progress: 42,
+    eta: "5h 15m",
+    carrier: "Cold Chain Logistics",
   },
   {
     id: "SH-2024-002",
-    origin: "Miami, FL",
-    destination: "Boston, MA",
+    origin: "Cancún",
+    destination: "Mérida",
     status: "pending" as const,
     progress: 0,
     eta: "Not started",
-    carrier: "Cold Chain Logistics",
+    carrier: "Swift Transport",
   },
 ];
 
@@ -50,8 +50,8 @@ const InteractiveMap = () => {
       <div className="p-6 border-b border-border">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">Live Shipment Tracking</h2>
-            <p className="text-muted-foreground mt-1">Real-time route visualization and status</p>
+            <h2 className="text-2xl font-bold text-foreground">Shipment Tracking</h2>
+            <p className="text-muted-foreground mt-1">Real-time route visualization across Mexico</p>
           </div>
           <Badge className="bg-primary/10 text-primary border-primary/20">
             <Navigation className="w-3 h-3 mr-1" />
