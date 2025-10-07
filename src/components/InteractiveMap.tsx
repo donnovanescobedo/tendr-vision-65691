@@ -61,13 +61,41 @@ const InteractiveMap = () => {
       </div>
 
       {/* Map Placeholder with Routes */}
-      <div className="relative bg-muted/30 h-96 border-b border-border">
-        {/* Simulated Map Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/50 to-muted/20">
-          <div className="absolute inset-0 opacity-10" style={{
-            backgroundImage: "repeating-linear-gradient(0deg, hsl(var(--border)) 0px, hsl(var(--border)) 1px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, hsl(var(--border)) 0px, hsl(var(--border)) 1px, transparent 1px, transparent 40px)"
-          }}></div>
+      <div className="relative bg-gradient-to-br from-green-50 via-amber-50 to-blue-50 dark:from-green-950/20 dark:via-amber-950/20 dark:to-blue-950/20 h-96 border-b border-border overflow-hidden">
+        {/* Terrain Background */}
+        <div className="absolute inset-0 opacity-30">
+          {/* Mountain ranges */}
+          <svg className="absolute top-0 left-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="terrain" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <path d="M0 80 L25 60 L50 70 L75 50 L100 65 L100 100 L0 100 Z" fill="hsl(var(--muted))" opacity="0.3"/>
+                <path d="M0 90 L20 85 L40 88 L60 82 L80 87 L100 85 L100 100 L0 100 Z" fill="hsl(var(--muted))" opacity="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#terrain)" />
+          </svg>
         </div>
+        
+        {/* Road Network */}
+        <svg className="absolute inset-0 w-full h-full opacity-20">
+          <line x1="10%" y1="30%" x2="90%" y2="30%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" strokeDasharray="10,5" />
+          <line x1="30%" y1="10%" x2="30%" y2="90%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" strokeDasharray="10,5" />
+          <line x1="70%" y1="10%" x2="70%" y2="90%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" strokeDasharray="10,5" />
+          <line x1="10%" y1="70%" x2="90%" y2="70%" stroke="hsl(var(--muted-foreground))" strokeWidth="2" strokeDasharray="10,5" />
+          <line x1="20%" y1="50%" x2="80%" y2="50%" stroke="hsl(var(--muted-foreground))" strokeWidth="3" strokeDasharray="15,8" />
+        </svg>
+        
+        {/* City Markers */}
+        <div className="absolute top-[25%] left-[25%] w-3 h-3 bg-foreground/40 rounded-full animate-pulse" title="Ciudad de México" />
+        <div className="absolute top-[20%] right-[30%] w-2 h-2 bg-foreground/40 rounded-full" title="Monterrey" />
+        <div className="absolute top-[35%] left-[35%] w-2 h-2 bg-foreground/40 rounded-full" title="Guadalajara" />
+        <div className="absolute top-[15%] left-[15%] w-2 h-2 bg-foreground/40 rounded-full" title="Tijuana" />
+        <div className="absolute bottom-[20%] right-[20%] w-2 h-2 bg-foreground/40 rounded-full" title="Cancún" />
+        
+        {/* Grid overlay for coordinates */}
+        <div className="absolute inset-0 opacity-5" style={{
+          backgroundImage: "repeating-linear-gradient(0deg, hsl(var(--foreground)) 0px, hsl(var(--foreground)) 1px, transparent 1px, transparent 50px), repeating-linear-gradient(90deg, hsl(var(--foreground)) 0px, hsl(var(--foreground)) 1px, transparent 1px, transparent 50px)"
+        }}></div>
 
         {/* Route Indicators */}
         <div className="absolute inset-0 flex items-center justify-center">
