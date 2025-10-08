@@ -1,6 +1,6 @@
 import { Navigation, Truck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import MapboxMap from "./MapboxMap";
+import mexicoMap from "@/assets/mexico-map-hero.jpg";
 
 const mockRoutes = [
   {
@@ -67,8 +67,34 @@ const InteractiveMap = () => {
         </div>
       </div>
 
-      {/* Mapbox Map */}
-      <MapboxMap routes={mockRoutes} />
+      {/* Static Map with Overlays (No WebGL) */}
+      <div className="relative h-96 border-b border-border overflow-hidden">
+        <img src={mexicoMap} alt="Mexico map for shipment tracking" className="absolute inset-0 w-full h-full object-cover opacity-95" loading="lazy" />
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent to-background/20" />
+        {/* Route overlays using approximate positions */}
+        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+          {/* CDMX (48,62) -> Monterrey (56,22) */}
+          <defs>
+            <style>{` @keyframes dash { to { stroke-dashoffset: -20; } } `}</style>
+          </defs>
+          <line x1="48" y1="62" x2="56" y2="22" stroke="hsl(var(--success))" strokeWidth="1.8" strokeDasharray="4 4" style={{ animation: 'dash 2s linear infinite' }} />
+          {/* GDL (42,56) -> Tijuana (12,18) */}
+          <line x1="42" y1="56" x2="12" y2="18" stroke="hsl(var(--success))" strokeWidth="1.6" strokeDasharray="4 4" style={{ animation: 'dash 2.2s linear infinite' }} />
+          {/* Cancún (86,42) -> Mérida (78,44) */}
+          <line x1="86" y1="42" x2="78" y2="44" stroke="hsl(var(--warning))" strokeWidth="1.6" strokeDasharray="4 4" style={{ animation: 'dash 1.8s linear infinite' }} />
+          {/* Endpoints */}
+          <circle cx="48" cy="62" r="1.6" fill="hsl(var(--success))" />
+          <circle cx="56" cy="22" r="1.6" fill="hsl(var(--success))" />
+          <circle cx="42" cy="56" r="1.4" fill="hsl(var(--success))" />
+          <circle cx="12" cy="18" r="1.4" fill="hsl(var(--success))" />
+          <circle cx="86" cy="42" r="1.4" fill="hsl(var(--warning))" />
+          <circle cx="78" cy="44" r="1.4" fill="hsl(var(--warning))" />
+        </svg>
+        {/* Accent truck icons near active routes */}
+        <Truck className="absolute text-success" style={{ left: '52%', top: '42%' }} />
+        <Truck className="absolute text-success" style={{ left: '28%', top: '36%' }} />
+        <Truck className="absolute text-warning" style={{ left: '82%', top: '43%' }} />
+      </div>
 
       {/* Route Details */}
       <div className="p-6">
