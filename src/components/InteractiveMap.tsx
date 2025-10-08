@@ -1,14 +1,11 @@
-import { Navigation, Truck } from "lucide-react";
+import { MapPin, Navigation, Truck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import mexicoMap from "@/assets/mexico-map-hero.jpg";
 
 const mockRoutes = [
   {
     id: "SH-2024-001",
     origin: "Ciudad de México",
     destination: "Monterrey",
-    originCoords: [-99.1332, 19.4326] as [number, number],
-    destinationCoords: [-100.3161, 25.6866] as [number, number],
     status: "accepted" as const,
     progress: 65,
     eta: "3h 20m",
@@ -18,8 +15,6 @@ const mockRoutes = [
     id: "SH-2024-003",
     origin: "Guadalajara",
     destination: "Tijuana",
-    originCoords: [-103.3496, 20.6597] as [number, number],
-    destinationCoords: [-117.0382, 32.5149] as [number, number],
     status: "accepted" as const,
     progress: 42,
     eta: "5h 15m",
@@ -29,8 +24,6 @@ const mockRoutes = [
     id: "SH-2024-002",
     origin: "Cancún",
     destination: "Mérida",
-    originCoords: [-86.8515, 21.1619] as [number, number],
-    destinationCoords: [-89.5926, 20.9674] as [number, number],
     status: "pending" as const,
     progress: 0,
     eta: "Not started",
@@ -67,33 +60,46 @@ const InteractiveMap = () => {
         </div>
       </div>
 
-      {/* Static Map with Overlays (No WebGL) */}
-      <div className="relative h-96 border-b border-border overflow-hidden">
-        <img src={mexicoMap} alt="Mexico map for shipment tracking" className="absolute inset-0 w-full h-full object-cover opacity-95" loading="lazy" />
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent to-background/20" />
-        {/* Route overlays using approximate positions */}
-        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
-          {/* CDMX (48,62) -> Monterrey (56,22) */}
-          <defs>
-            <style>{` @keyframes dash { to { stroke-dashoffset: -20; } } `}</style>
-          </defs>
-          <line x1="48" y1="62" x2="56" y2="22" stroke="hsl(var(--success))" strokeWidth="1.8" strokeDasharray="4 4" style={{ animation: 'dash 2s linear infinite' }} />
-          {/* GDL (42,56) -> Tijuana (12,18) */}
-          <line x1="42" y1="56" x2="12" y2="18" stroke="hsl(var(--success))" strokeWidth="1.6" strokeDasharray="4 4" style={{ animation: 'dash 2.2s linear infinite' }} />
-          {/* Cancún (86,42) -> Mérida (78,44) */}
-          <line x1="86" y1="42" x2="78" y2="44" stroke="hsl(var(--warning))" strokeWidth="1.6" strokeDasharray="4 4" style={{ animation: 'dash 1.8s linear infinite' }} />
-          {/* Endpoints */}
-          <circle cx="48" cy="62" r="1.6" fill="hsl(var(--success))" />
-          <circle cx="56" cy="22" r="1.6" fill="hsl(var(--success))" />
-          <circle cx="42" cy="56" r="1.4" fill="hsl(var(--success))" />
-          <circle cx="12" cy="18" r="1.4" fill="hsl(var(--success))" />
-          <circle cx="86" cy="42" r="1.4" fill="hsl(var(--warning))" />
-          <circle cx="78" cy="44" r="1.4" fill="hsl(var(--warning))" />
-        </svg>
-        {/* Accent truck icons near active routes */}
-        <Truck className="absolute text-success" style={{ left: '52%', top: '42%' }} />
-        <Truck className="absolute text-success" style={{ left: '28%', top: '36%' }} />
-        <Truck className="absolute text-warning" style={{ left: '82%', top: '43%' }} />
+      {/* Map Placeholder with Routes */}
+      <div className="relative bg-muted/30 h-96 border-b border-border">
+        {/* Simulated Map Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-muted/50 to-muted/20">
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: "repeating-linear-gradient(0deg, hsl(var(--border)) 0px, hsl(var(--border)) 1px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, hsl(var(--border)) 0px, hsl(var(--border)) 1px, transparent 1px, transparent 40px)"
+          }}></div>
+        </div>
+
+        {/* Route Indicators */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative w-full max-w-4xl h-64">
+            {/* Route 1 - Active */}
+            <div className="absolute top-1/4 left-1/4 animate-pulse">
+              <MapPin className="w-8 h-8 text-success fill-success/20" />
+            </div>
+            <svg className="absolute top-1/4 left-1/4 w-1/2 h-1/2">
+              <line x1="0" y1="0" x2="100%" y2="50%" stroke="hsl(var(--success))" strokeWidth="2" strokeDasharray="5,5" />
+            </svg>
+            <div className="absolute top-1/3 left-1/2 animate-truck-move">
+              <Truck className="w-6 h-6 text-success" />
+            </div>
+            <div className="absolute top-1/2 right-1/4">
+              <MapPin className="w-8 h-8 text-success fill-success/20" />
+            </div>
+
+            {/* Route 2 - Active */}
+            <div className="absolute bottom-1/4 left-1/3 animate-pulse" style={{ animationDelay: "0.5s" }}>
+              <MapPin className="w-8 h-8 text-success fill-success/20" />
+            </div>
+            <svg className="absolute bottom-1/4 left-1/3 w-2/5 h-1/3">
+              <line x1="0" y1="0" x2="100%" y2="-100%" stroke="hsl(var(--success))" strokeWidth="2" strokeDasharray="5,5" />
+            </svg>
+
+            {/* Route 3 - Pending */}
+            <div className="absolute top-3/4 right-1/3 animate-pulse" style={{ animationDelay: "1s" }}>
+              <MapPin className="w-8 h-8 text-warning fill-warning/20" />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Route Details */}
