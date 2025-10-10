@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { MessageSquare, Mail, Phone, AlertTriangle, UserCog } from "lucide-react";
+import { MessageSquare, Mail, Phone, AlertTriangle, UserCog, Bot, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card } from "@/components/ui/card";
 
 // Only carriers with 3+ rejections
 const mockRejectedCarriers = [
@@ -71,49 +72,94 @@ const CarrierPanel = () => {
   };
 
   return (
-    <div className="bg-card rounded-xl border border-border shadow-lg overflow-hidden animate-fade-in">
-      <div className="p-6 border-b border-border bg-destructive/5">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="w-5 h-5 text-destructive animate-pulse" />
-              <h2 className="text-2xl font-bold text-foreground">Carrier Escalation Panel</h2>
+    <div className="bg-gradient-to-br from-card via-card to-destructive/5 rounded-2xl border-2 border-destructive/20 shadow-xl overflow-hidden animate-fade-in">
+      <div className="p-8 border-b border-destructive/20 bg-gradient-to-r from-destructive/5 via-destructive/10 to-destructive/5">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="p-2 bg-destructive/10 rounded-lg">
+                <AlertTriangle className="w-6 h-6 text-destructive" />
+              </div>
+              <h2 className="text-3xl font-bold text-foreground">Carriers Needing Your Attention</h2>
             </div>
-            <p className="text-muted-foreground">Carriers with 3+ rejections requiring human follow-up</p>
+            <div className="flex items-start gap-3 bg-card/50 rounded-lg p-4 border border-border/50">
+              <Bot className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Our AI tried reaching these carriers multiple times through phone, WhatsApp, and email, but they keep rejecting shipments. 
+                <span className="font-semibold text-foreground"> Time for a human touch!</span>
+              </p>
+            </div>
           </div>
-          <Badge className="bg-destructive/10 text-destructive border-destructive/20 text-lg px-4 py-2">
-            {mockRejectedCarriers.length} Carrier{mockRejectedCarriers.length > 1 ? 's' : ''} Need Attention
-          </Badge>
+          <div className="flex flex-col items-center gap-2">
+            <Badge className="bg-destructive text-destructive-foreground border-0 text-2xl px-6 py-3 shadow-lg">
+              {mockRejectedCarriers.length}
+            </Badge>
+            <span className="text-xs text-muted-foreground font-medium">Carriers Waiting</span>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
-        {mockRejectedCarriers.map((carrier) => (
-          <div
-            key={carrier.id}
-            className="bg-card rounded-lg border-2 border-destructive/30 p-4 animate-fade-in hover:border-destructive/50 transition-colors cursor-pointer"
-            onClick={() => setSelectedCarrier(carrier)}
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <AlertTriangle className="w-5 h-5 text-destructive animate-pulse" />
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-sm truncate">{carrier.carrierName}</h3>
-                <p className="text-xs text-muted-foreground">{carrier.shipmentId}</p>
-              </div>
-              <Badge className="bg-destructive/10 text-destructive border-destructive/20 text-xs">
-                {carrier.rejectionCount}
-              </Badge>
-            </div>
+      <div className="p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {mockRejectedCarriers.map((carrier, index) => (
+            <Card
+              key={carrier.id}
+              className="group relative overflow-hidden border-2 border-destructive/30 hover:border-destructive/60 transition-all duration-300 hover:shadow-xl cursor-pointer bg-card"
+              onClick={() => setSelectedCarrier(carrier)}
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              {/* Status indicator */}
+              <div className="absolute top-0 right-0 w-24 h-24 bg-destructive/10 rounded-bl-full" />
+              
+              <div className="p-6 relative">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-lg text-foreground mb-1 truncate">{carrier.carrierName}</h3>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span className="font-mono">{carrier.shipmentId}</span>
+                      <span>•</span>
+                      <span className="font-mono">{carrier.carrierId}</span>
+                    </div>
+                  </div>
+                  <Badge className="bg-destructive text-destructive-foreground border-0 text-base px-3 py-1 shadow-md">
+                    {carrier.rejectionCount}x
+                  </Badge>
+                </div>
 
-            <Button className="w-full" variant="destructive" size="sm" onClick={(e) => {
-              e.stopPropagation();
-              // Handle assign operator
-            }}>
-              <UserCog className="w-3 h-3 mr-2" />
-              Assign Human Operator
-            </Button>
-          </div>
-        ))}
+                {/* AI Attempts Summary */}
+                <div className="bg-muted/30 rounded-lg p-3 mb-4 border border-border/50">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Bot className="w-4 h-4 text-primary" />
+                    <span className="text-xs font-semibold text-foreground">AI Contact Attempts</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {carrier.communicationAttempts.map((attempt, idx) => (
+                      <div key={idx} className="flex items-center gap-1">
+                        {getChannelIcon(attempt.channel)}
+                        <span className="text-xs text-muted-foreground capitalize">{attempt.channel}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Button */}
+                <Button 
+                  className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" 
+                  variant="outline" 
+                  size="default"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Handle assign operator
+                  }}
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Take Over This Case
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {/* Detailed Dialog */}
